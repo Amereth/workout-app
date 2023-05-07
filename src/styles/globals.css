@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-stone-900;
+}
+
+.button {
+  @apply flex h-12 items-center justify-center whitespace-nowrap rounded-3xl bg-orange-300 px-8 text-3xl;
+}
