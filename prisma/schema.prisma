@@ -16,4 +16,15 @@ model Exercise {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
     name      String   @unique
+    Workout   Workout? @relation(fields: [workoutId], references: [id])
+    workoutId Int?
+}
+
+model Workout {
+    id           Int        @id @default(autoincrement())
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @default(now()) @updatedAt
+    name         String     @unique
+    userId       String
+    exercisesIds Exercise[]
 }
