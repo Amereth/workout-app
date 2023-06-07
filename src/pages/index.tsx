@@ -1,28 +1,28 @@
-import { SignIn, SignInButton, useUser } from '@clerk/nextjs'
+import { useUser } from '@clerk/nextjs'
 import { type NextPage } from 'next'
 import Head from 'next/head'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const Home: NextPage = () => {
   const user = useUser()
 
-  if (!user.isSignedIn)
-    return (
-      <main>
-        <SignInButton>
-          <span className='button'>Bход</span>
-        </SignInButton>
-        <SignIn path='/sign-in' routing='path' signUpUrl='/sign-up' />
-      </main>
-    )
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!user.isSignedIn) {
+      void router.push('/signIn')
+    }
+  }, [user.isSignedIn, router])
 
   return (
     <>
       <Head>
         <title>We Workout</title>
       </Head>
-      <main className='grid h-screen place-content-center text-white'>
-        home page
-      </main>
+
+      <main className='grid h-screen place-content-center text-white'>{}</main>
     </>
   )
 }
