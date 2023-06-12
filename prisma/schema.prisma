@@ -24,7 +24,7 @@ model Workout {
     id           Int        @id @default(autoincrement())
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @default(now()) @updatedAt
-    name         String     @unique
+    name         String
     userId       String
     exercisesIds Exercise[]
 }
