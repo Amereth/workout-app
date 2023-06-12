@@ -1,9 +1,6 @@
-import { withClerkMiddleware } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { authMiddleware } from '@clerk/nextjs'
 
-export default withClerkMiddleware(() => {
-  return NextResponse.next();
-});
+export default authMiddleware()
 
 export const config = {
   matcher: [
@@ -14,7 +11,8 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
-    "/((?!static|.*\\..*|_next|favicon.ico).*)",
-    "/",
+    '/((?!.*\\..*|_next).*)',
+    '/',
+    '/(api|trpc)(.*)',
   ],
-};
+}

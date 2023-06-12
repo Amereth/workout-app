@@ -14,9 +14,9 @@
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
 
-import { prisma } from "~/server/db";
+import { prisma } from '~/server/db'
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -28,11 +28,10 @@ import { prisma } from "~/server/db";
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = () => {
-  return {
-    prisma,
-  };
-};
+const createInnerTRPCContext = (user: User | null) => ({
+  user,
+  prisma,
+})
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -40,10 +39,16 @@ const createInnerTRPCContext = () => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext();
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  async function getUser() {
+    const { userId } = getAuth(opts.req)
+    const user = userId ? await clerkClient.users.getUser(userId) : null
+    return user
+  }
+  const user = await getUser()
+  return createInnerTRPCContext(user)
   // Get the session from the server using the getServerSession wrapper function
-};
+}
 
 /**
  * 2. INITIALIZATION
@@ -52,9 +57,10 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
-import { ZodError } from "zod";
+import { initTRPC } from '@trpc/server'
+import superjson from 'superjson'
+import { ZodError } from 'zod'
+import { type User, clerkClient, getAuth } from '@clerk/nextjs/server'
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -66,9 +72,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
-    };
+    }
   },
-});
+})
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -82,7 +88,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  *
  * @see https://trpc.io/docs/router
  */
-export const createTRPCRouter = t.router;
+export const createTRPCRouter = t.router
 
 /**
  * Public (unauthenticated) procedure
@@ -91,7 +97,7 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure
 
 /**
  * Protected (authenticated) procedure
