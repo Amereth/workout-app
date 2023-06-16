@@ -57,7 +57,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { initTRPC } from '@trpc/server'
+import { TRPCError, initTRPC } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
 import { type User, clerkClient, getAuth } from '@clerk/nextjs/server'
@@ -107,3 +107,12 @@ export const publicProcedure = t.procedure
  *
  * @see https://trpc.io/docs/procedures
  */
+
+const isAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authenticated' })
+  }
+  return next({ ctx: { user: ctx.user } })
+})
+
+export const protectedProcedure = t.procedure.use(isAuthed)

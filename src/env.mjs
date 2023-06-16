@@ -8,6 +8,7 @@ const server = z.object({
   DIRECT_URL: z.string().url(),
   DATABASE_URL: z.string().url(),
   DATABASE_API_KEY: z.string(),
+  SUPABASE_PROJECT_URL: z.string().url(),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
   CLERK_SECRET_KEY: z.string(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
@@ -32,6 +33,7 @@ const processEnv = {
   DIRECT_URL: process.env.DIRECT_URL,
   DATABASE_URL: process.env.DATABASE_URL,
   DATABASE_API_KEY: process.env.DATABASE_API_KEY,
+  SUPABASE_PROJECT_URL: process.env.SUPABASE_PROJECT_URL,
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
