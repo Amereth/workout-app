@@ -12,19 +12,18 @@ datasource db {
 }
 
 model Exercise {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now()) @updatedAt
-    name      String   @unique
-    Workout   Workout? @relation(fields: [workoutId], references: [id])
-    workoutId Int?
+    id        Int       @id @default(autoincrement())
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @default(now()) @updatedAt
+    name      String    @unique
+    workouts  Workout[]
 }
 
 model Workout {
-    id           Int        @id @default(autoincrement())
-    createdAt    DateTime   @default(now())
-    updatedAt    DateTime   @default(now()) @updatedAt
-    name         String
-    userId       String
-    exercisesIds Exercise[]
+    id        Int        @id @default(autoincrement())
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @default(now()) @updatedAt
+    name      String
+    userId    String
+    exercises Exercise[]
 }
