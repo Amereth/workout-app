@@ -12,18 +12,53 @@ datasource db {
 }
 
 model Exercise {
-    id        Int           @id @default(autoincrement())
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @default(now()) @updatedAt
-    name      String        @unique
-    workouts  WorkoutPlan[]
+    id              Int              @id @default(autoincrement())
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    name            String           @unique
+    workouts        WorkoutPlan[]
+    exerciseRecords ExerciseRecord[]
+}
+
+model ExerciseRecord {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    userId     String
+    workout    Workout? @relation(fields: [workoutId], references: [id])
+    workoutId  Int?
+    exercise   Exercise @relation(fields: [exerciseId], references: [id])
+    exerciseId Int
+    sets       Set[]
+}
+
+model Set {
+    id               Int            @id @default(autoincrement())
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+    userId           String
+    weight           Float
+    reps             Int
+    exerciseRecord   ExerciseRecord @relation(fields: [exerciseRecordId], references: [id])
+    exerciseRecordId Int
 }
 
 model WorkoutPlan {
     id        Int        @id @default(autoincrement())
     createdAt DateTime   @default(now())
-    updatedAt DateTime   @default(now()) @updatedAt
+    updatedAt DateTime   @updatedAt
     name      String
     userId    String
     exercises Exercise[]
+    workouts  Workout[]
+}
+
+model Workout {
+    id              Int              @id @default(autoincrement())
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    userId          String
+    workoutPlan     WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
+    workoutPlanId   Int
+    exerciseRecords ExerciseRecord[]
 }

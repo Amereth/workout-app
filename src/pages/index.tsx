@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button'
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { NewWorkoutPlanDialog } from '../components/NewWorkoutPlanDialog'
+import { NewWorkoutDialog } from '../components/NewWorkoutDialog'
 
 const Home: NextPage = () => {
-  const dialogRef = useRef<HTMLDialogElement>(null)
-  const user = useUser()
+  const newWorkoutPlanDialogRef = useRef<HTMLDialogElement>(null)
+  const newWorkoutDialogRef = useRef<HTMLDialogElement>(null)
 
+  const user = useUser()
   const router = useRouter()
 
   useEffect(() => {
@@ -24,15 +26,16 @@ const Home: NextPage = () => {
         <title>We Workout</title>
       </Head>
 
-      <NewWorkoutPlanDialog dialogRef={dialogRef} />
+      <NewWorkoutPlanDialog dialogRef={newWorkoutPlanDialogRef} />
+      <NewWorkoutDialog dialogRef={newWorkoutDialogRef} />
 
-      <header className='px-4 py-2'>
-        <Button
-          onClick={() => {
-            dialogRef.current?.showModal()
-          }}
-        >
+      <header className='flex gap-4 px-4 py-2'>
+        <Button onClick={() => newWorkoutPlanDialogRef.current?.showModal()}>
           create new workout plan
+        </Button>
+
+        <Button onClick={() => newWorkoutDialogRef.current?.showModal()}>
+          create new workout
         </Button>
       </header>
 
