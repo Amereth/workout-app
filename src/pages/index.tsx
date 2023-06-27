@@ -1,18 +1,18 @@
 import { useUser } from '@clerk/nextjs'
 import { type NextPage } from 'next'
 import Head from 'next/head'
-import { Button } from '@/components/ui/button'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { NewWorkoutPlanDialog } from '../components/NewWorkoutPlanDialog'
-import { NewWorkoutDialog } from '../components/NewWorkoutDialog'
+import { NewWorkoutPlan } from '../components/NewWorkoutPlan'
+import { NewWorkout } from '../components/NewWorkout'
+import { api } from '../utils/api'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
-  const newWorkoutPlanDialogRef = useRef<HTMLDialogElement>(null)
-  const newWorkoutDialogRef = useRef<HTMLDialogElement>(null)
-
   const user = useUser()
   const router = useRouter()
+
+  const { data: workouts } = api.workouts.getAll.useQuery()
 
   useEffect(() => {
     if (!user.isSignedIn) {
@@ -26,20 +26,19 @@ const Home: NextPage = () => {
         <title>We Workout</title>
       </Head>
 
-      <NewWorkoutPlanDialog dialogRef={newWorkoutPlanDialogRef} />
-      <NewWorkoutDialog dialogRef={newWorkoutDialogRef} />
-
       <header className='flex gap-4 px-4 py-2'>
-        <Button onClick={() => newWorkoutPlanDialogRef.current?.showModal()}>
-          create new workout plan
-        </Button>
-
-        <Button onClick={() => newWorkoutDialogRef.current?.showModal()}>
-          create new workout
-        </Button>
+        <NewWorkoutPlan />
+        <NewWorkout />
       </header>
 
-      <main className='grid h-screen place-content-center'></main>
+      <main className='grid h-screen place-content-center'>
+        <h2>workouts</h2>
+        {workouts?.map((workout) => (
+          <Link key={workout.id} href={`workout/${workout.id}`}>
+            {workout.workoutPlan.name}
+          </Link>
+        ))}
+      </main>
     </>
   )
 }
