@@ -1,36 +1,45 @@
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
 
-export const workoutPlansRouter = createTRPCRouter({
-  getAll: publicProcedure.query((opts) =>
-    opts.ctx.prisma.workoutPlan.findMany({
-      where: { userId: opts.ctx.user?.id },
-      include: { exercises: true },
+export const workoutsRouter = createTRPCRouter({
+  get: protectedProcedure.input(z.number()).query((opts) =>
+    opts.ctx.prisma.workout.findMany({
+      where: {
+        userId: opts.ctx.user?.id,
+        id: opts.input,
+      },
+      include: {
+        workoutPlan: {
+          include: {
+            exercises: true,
+          },
+        },
+      },
     })
   ),
 
-  create: publicProcedure
+  getAll: protectedProcedure.query((opts) =>
+    opts.ctx.prisma.workout.findMany({
+      where: { userId: opts.ctx.user?.id },
+      include: { workoutPlan: true },
+    })
+  ),
+
+  create: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
-        exercises: z.array(z.number()),
+        workoutPlan: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user) {
-        return
-      }
+      if (!ctx.user) return
 
-      return await ctx.prisma.workoutPlan.create({
+      return await ctx.prisma.workout.create({
         data: {
-          name: input.name,
-          exercises: {
-            connect: input.exercises.map((id) => ({ id })),
-          },
           userId: ctx.user.id,
-        },
-        include: {
-          exercises: true,
+          workoutPlan: {
+            connect: { id: input.workoutPlan },
+          },
         },
       })
     }),
