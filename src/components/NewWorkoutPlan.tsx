@@ -62,7 +62,7 @@ export const NewWorkoutPlan = () => {
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>workout name</FormLabel>
+                  <FormLabel>plan name</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
