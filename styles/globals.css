@@ -84,3 +84,7 @@
     @apply h-[100vh];
   }
 }
+
+main {
+  @apply px-4 py-4;
+}
