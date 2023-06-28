@@ -43,7 +43,7 @@ export const NewWorkout = () => {
 
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button>create workout</Button>
       </SheetTrigger>
 
