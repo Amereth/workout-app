@@ -7,6 +7,7 @@ import { NewWorkoutPlan } from '../components/NewWorkoutPlan'
 import { NewWorkout } from '../components/NewWorkout'
 import { api } from '../utils/api'
 import Link from 'next/link'
+import { PageHeader } from '../components/PageHeader'
 
 const Home: NextPage = () => {
   const user = useUser()
@@ -26,10 +27,10 @@ const Home: NextPage = () => {
         <title>We Workout</title>
       </Head>
 
-      <header className='flex gap-4 px-4 py-2'>
+      <PageHeader>
         <NewWorkoutPlan />
         <NewWorkout />
-      </header>
+      </PageHeader>
 
       <main className='grid h-screen place-content-center'>
         <h2>workouts</h2>
