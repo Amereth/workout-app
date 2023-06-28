@@ -1,7 +1,7 @@
 import { createTRPCRouter } from '~/server/api/trpc'
-import { workoutPlansRouter } from './routers/workoutPlans'
-import { exercisesRouter } from './routers/exercises'
-import { workoutsRouter } from './routers/workouts'
+import { workoutPlansRouter } from './routers/workoutPlansRouter'
+import { exercisesRouter } from './routers/exercisesRouter'
+import { workoutsRouter } from './routers/workoutsRouter'
 
 /**
  * This is the primary router for your server.
