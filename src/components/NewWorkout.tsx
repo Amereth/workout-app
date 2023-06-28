@@ -68,7 +68,6 @@ export const NewWorkout = () => {
                     <SelectContent>
                       {workoutPlans?.map((workoutPlan) => (
                         <SelectItem
-                          className='z-10'
                           key={workoutPlan.id}
                           value={workoutPlan.id.toString()}
                         >
