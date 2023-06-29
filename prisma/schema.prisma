@@ -12,7 +12,7 @@ datasource db {
 }
 
 model Exercise {
-    id              Int              @id @default(autoincrement())
+    id              String           @id @default(uuid())
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
     name            String           @unique
@@ -21,30 +21,30 @@ model Exercise {
 }
 
 model ExerciseRecord {
-    id         Int      @id @default(autoincrement())
+    id         String   @id @default(uuid())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
     userId     String
     workout    Workout? @relation(fields: [workoutId], references: [id])
-    workoutId  Int?
+    workoutId  String?
     exercise   Exercise @relation(fields: [exerciseId], references: [id])
-    exerciseId Int
+    exerciseId String
     sets       Set[]
 }
 
 model Set {
-    id               Int            @id @default(autoincrement())
+    id               String         @id @default(uuid())
     createdAt        DateTime       @default(now())
     updatedAt        DateTime       @updatedAt
     userId           String
     weight           Float
     reps             Int
     exerciseRecord   ExerciseRecord @relation(fields: [exerciseRecordId], references: [id])
-    exerciseRecordId Int
+    exerciseRecordId String
 }
 
 model WorkoutPlan {
-    id        Int        @id @default(autoincrement())
+    id        String     @id @default(uuid())
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
     name      String
@@ -54,11 +54,11 @@ model WorkoutPlan {
 }
 
 model Workout {
-    id              Int              @id @default(autoincrement())
+    id              String           @id @default(uuid())
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
     userId          String
     workoutPlan     WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
-    workoutPlanId   Int
+    workoutPlanId   String
     exerciseRecords ExerciseRecord[]
 }
