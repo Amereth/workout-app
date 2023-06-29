@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useUser } from '@clerk/nextjs'
 import { type NextPage } from 'next'
 import Head from 'next/head'
@@ -6,7 +7,6 @@ import { useRouter } from 'next/router'
 import { NewWorkoutPlan } from '../components/NewWorkoutPlan'
 import { NewWorkout } from '../components/NewWorkout'
 import { api } from '../utils/api'
-import Link from 'next/link'
 import { PageHeader } from '../components/PageHeader'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
@@ -44,12 +44,14 @@ const Home: NextPage = () => {
         <Table>
           <TableBody>
             {workouts?.map((workout) => (
-              <Link key={workout.id} href={`workout/${workout.id}`}>
-                <TableRow>
-                  <TableCell>{workout.workoutPlan.name}</TableCell>
-                  <TableCell>{formatter.format(workout.createdAt)}</TableCell>
-                </TableRow>
-              </Link>
+              <TableRow
+                key={workout.id}
+                onClick={() => router.push(`/workout/${workout.id}`)}
+                className='cursor-pointer'
+              >
+                <TableCell>{workout.workoutPlan.name}</TableCell>
+                <TableCell>{formatter.format(workout.createdAt)}</TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
