@@ -27,7 +27,7 @@ import { api } from '../utils/api'
 
 const formSchema = z.object({
   name: z.string().min(3, 'min 3 characters').max(50, 'max 50 characters'),
-  exercises: z.array(z.number()),
+  exercises: z.array(z.string()),
 })
 
 export const NewWorkoutPlan = () => {

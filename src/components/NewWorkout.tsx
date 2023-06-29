@@ -67,10 +67,7 @@ export const NewWorkout = () => {
                     </FormControl>
                     <SelectContent>
                       {workoutPlans?.map((workoutPlan) => (
-                        <SelectItem
-                          key={workoutPlan.id}
-                          value={workoutPlan.id.toString()}
-                        >
+                        <SelectItem key={workoutPlan.id} value={workoutPlan.id}>
                           {workoutPlan.name}
                         </SelectItem>
                       ))}
