@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { Button } from '@/components/ui/button'
@@ -20,6 +21,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { type Exercise, type Workout } from '@prisma/client'
+import { useQueryClient } from '@tanstack/react-query'
 
 const formSchema = z.object({
   exerciseId: z.string(),
@@ -39,8 +41,17 @@ export const AddExercise = ({
     defaultValues: { exerciseId: undefined },
   })
 
+  const client = useQueryClient()
+
   const onSubmit = ({ exerciseId }: z.infer<typeof formSchema>) =>
-    mutate({ workoutId, exerciseId })
+    mutate(
+      { workoutId, exerciseId },
+      {
+        onSuccess() {
+          client.invalidateQueries(['workouts.get', workoutId])
+        },
+      }
+    )
 
   return (
     <Form {...form}>

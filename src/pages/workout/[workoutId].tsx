@@ -15,7 +15,9 @@ export default function WorkoutPage() {
 
   const workoutId = queryParamsToString(workoutIdFromParams)
 
-  const { data: workout } = api.workouts.get.useQuery(workoutId)
+  const { data: workout } = api.workouts.get.useQuery(workoutId, {
+    queryKey: ['workouts.get', workoutId],
+  })
 
   if (!workout) return null
 
@@ -28,6 +30,9 @@ export default function WorkoutPage() {
       </PageHeader>
 
       <main>
+        {workout.exerciseRecords.map((exercise) => (
+          <div key={exercise.id}>{exercise.exercise.name}</div>
+        ))}
         <AddExercise
           workoutId={workout.id}
           exercises={workout.workoutPlan.exercises}
