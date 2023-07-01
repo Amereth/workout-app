@@ -38,7 +38,7 @@ export const NewWorkout = () => {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    mutate({ workoutPlan: parseInt(values.workoutPlan) })
+    mutate({ workoutPlan: values.workoutPlan })
   }
 
   return (
