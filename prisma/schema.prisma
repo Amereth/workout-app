@@ -12,12 +12,12 @@ datasource db {
 }
 
 model Exercise {
-    id        String        @id @default(uuid())
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @updatedAt
-    name      String        @unique
-    workouts  WorkoutPlan[]
-    sets      Set[]
+    id           String        @id @default(uuid())
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    name         String        @unique
+    workoutPlans WorkoutPlan[]
+    sets         Set[]
 }
 
 model Set {
