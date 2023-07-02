@@ -16,9 +16,7 @@ export default function WorkoutPage() {
 
   const workoutId = queryParamsToString(workoutIdFromParams)
 
-  const { data: workout } = api.workouts.get.useQuery(workoutId, {
-    queryKey: ['workouts.get', workoutId],
-  })
+  const { data: workout } = api.workouts.get.useQuery(workoutId)
 
   if (!workout) return null
 
