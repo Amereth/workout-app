@@ -10,19 +10,16 @@ export const workoutsRouter = createTRPCRouter({
       },
       select: {
         id: true,
-        createdAt: true,
+        sets: {
+          include: {
+            exercise: true,
+          },
+        },
         workoutPlan: {
           select: {
             id: true,
             name: true,
             exercises: true,
-          },
-        },
-        exerciseRecords: {
-          select: {
-            id: true,
-            exercise: true,
-            sets: true,
           },
         },
       },
@@ -32,7 +29,14 @@ export const workoutsRouter = createTRPCRouter({
   getAll: protectedProcedure.query((opts) =>
     opts.ctx.prisma.workout.findMany({
       where: { userId: opts.ctx.user?.id },
-      include: { workoutPlan: true },
+      include: {
+        workoutPlan: {
+          include: {
+            exercises: true,
+          },
+        },
+        sets: true,
+      },
     })
   ),
 
@@ -47,25 +51,6 @@ export const workoutsRouter = createTRPCRouter({
           workoutPlan: {
             connect: { id: input.workoutPlan },
           },
-        },
-      })
-    }),
-
-  addExercise: protectedProcedure
-    .input(
-      z.object({
-        workoutId: z.string(),
-        exerciseId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.user) return
-
-      return await ctx.prisma.exerciseRecord.create({
-        data: {
-          userId: ctx.user?.id,
-          workoutId: input.workoutId,
-          exerciseId: input.exerciseId,
         },
       })
     }),
