@@ -52,6 +52,10 @@ export const workoutsRouter = createTRPCRouter({
             connect: { id: input.workoutPlan },
           },
         },
+        include: {
+          workoutPlan: true,
+          sets: true,
+        },
       })
     }),
 })

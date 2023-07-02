@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,9 @@ import {
   Sheet,
   SheetClose,
 } from '@/components/ui/sheet'
+import { useQueryClient } from '@tanstack/react-query'
+import { type Workout } from '@prisma/client'
+import { getQueryKey } from '@trpc/react-query'
 
 const formSchema = z.object({
   workoutPlan: z.string(),
@@ -30,11 +34,28 @@ const formSchema = z.object({
 export const NewWorkout = () => {
   const { data: workoutPlans } = api.workoutPlans.getAll.useQuery()
 
-  const { mutate } = api.workouts.create.useMutation()
+  const queryClient = useQueryClient()
+
+  const workoutsGetAllQueryKey = getQueryKey(
+    api.workouts.getAll,
+    undefined,
+    'query'
+  )
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { workoutPlan: undefined },
+  })
+
+  const { mutate } = api.workouts.create.useMutation({
+    onSuccess(data) {
+      queryClient.setQueryData<Workout[]>(workoutsGetAllQueryKey, (old) => {
+        if (!old) return old
+        return [...old, data] as Workout[]
+      })
+
+      form.reset()
+    },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
