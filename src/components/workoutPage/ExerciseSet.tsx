@@ -21,7 +21,7 @@ export function ExerciseSet({ workoutId, exercise, sets }: SetControlsProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <TableCell>{exercise.name}</TableCell>
+        <TableCell className='w-full'>{exercise.name}</TableCell>
       </SheetTrigger>
 
       <SheetContent className='flex flex-col'>
