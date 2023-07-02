@@ -12,35 +12,25 @@ datasource db {
 }
 
 model Exercise {
-    id              String           @id @default(uuid())
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
-    name            String           @unique
-    workouts        WorkoutPlan[]
-    exerciseRecords ExerciseRecord[]
-}
-
-model ExerciseRecord {
-    id         String   @id @default(uuid())
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    userId     String
-    workout    Workout? @relation(fields: [workoutId], references: [id])
-    workoutId  String?
-    exercise   Exercise @relation(fields: [exerciseId], references: [id])
-    exerciseId String
-    sets       Set[]
+    id        String        @id @default(uuid())
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+    name      String        @unique
+    workouts  WorkoutPlan[]
+    sets      Set[]
 }
 
 model Set {
-    id               String         @id @default(uuid())
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
-    userId           String
-    weight           Float
-    reps             Int
-    exerciseRecord   ExerciseRecord @relation(fields: [exerciseRecordId], references: [id])
-    exerciseRecordId String
+    id         String    @id @default(uuid())
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    userId     String
+    weight     Float
+    reps       Int
+    workout    Workout?  @relation(fields: [workoutId], references: [id])
+    workoutId  String?
+    exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+    exerciseId String?
 }
 
 model WorkoutPlan {
@@ -54,11 +44,11 @@ model WorkoutPlan {
 }
 
 model Workout {
-    id              String           @id @default(uuid())
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
-    userId          String
-    workoutPlan     WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
-    workoutPlanId   String
-    exerciseRecords ExerciseRecord[]
+    id            String      @id @default(uuid())
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    userId        String
+    workoutPlan   WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
+    workoutPlanId String
+    sets          Set[]
 }
