@@ -17,7 +17,7 @@ type SetControlsProps = {
   sets: Set[]
 }
 
-export function SetList({ workoutId, exercise, sets }: SetControlsProps) {
+export function ExerciseSet({ workoutId, exercise, sets }: SetControlsProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>

@@ -6,7 +6,7 @@ import { api } from '@/src/utils/api'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { queryParamsToString } from '@/src/utils/queryParamsToString'
-import { SetList } from '@/src/components/workoutPage/SetList'
+import { ExerciseSet } from '@/src/components/workoutPage/ExerciseSet'
 
 export default function WorkoutPage() {
   const {
@@ -31,7 +31,7 @@ export default function WorkoutPage() {
 
       <main>
         {workout.workoutPlan.exercises.map((exercise) => (
-          <SetList
+          <ExerciseSet
             key={exercise.id}
             exercise={exercise}
             workoutId={workout.id}
