@@ -7,6 +7,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { queryParamsToString } from '@/src/utils/queryParamsToString'
 import { AddExercise } from '@/src/components/workoutPage/AddExercise'
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@/components/ui/accordion'
+import { SetControls } from '@/src/components/workoutPage/SetControls'
 
 export default function WorkoutPage() {
   const {
@@ -30,13 +37,21 @@ export default function WorkoutPage() {
       </PageHeader>
 
       <main>
-        {workout.exerciseRecords.map((exercise) => (
-          <div key={exercise.id}>{exercise.exercise.name}</div>
-        ))}
         <AddExercise
           workoutId={workout.id}
           exercises={workout.workoutPlan.exercises}
         />
+
+        <Accordion type='multiple'>
+          {workout.exerciseRecords.map((exercise) => (
+            <AccordionItem key={exercise.id} value={exercise.id}>
+              <AccordionTrigger>{exercise.exercise.name}</AccordionTrigger>
+              <AccordionContent>
+                <SetControls />
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </main>
     </>
   )
