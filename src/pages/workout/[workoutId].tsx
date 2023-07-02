@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { queryParamsToString } from '@/src/utils/queryParamsToString'
 import { ExerciseSet } from '@/src/components/workoutPage/ExerciseSet'
+import { Table, TableBody, TableRow } from '@/components/ui/table'
 
 export default function WorkoutPage() {
   const {
@@ -30,14 +31,21 @@ export default function WorkoutPage() {
       </PageHeader>
 
       <main>
-        {workout.workoutPlan.exercises.map((exercise) => (
-          <ExerciseSet
-            key={exercise.id}
-            exercise={exercise}
-            workoutId={workout.id}
-            sets={workout.sets.filter((set) => set.exerciseId === exercise.id)}
-          />
-        ))}
+        <Table>
+          <TableBody>
+            {workout.workoutPlan.exercises.map((exercise) => (
+              <TableRow key={exercise.id}>
+                <ExerciseSet
+                  exercise={exercise}
+                  workoutId={workout.id}
+                  sets={workout.sets.filter(
+                    (set) => set.exerciseId === exercise.id
+                  )}
+                />
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </main>
     </>
   )

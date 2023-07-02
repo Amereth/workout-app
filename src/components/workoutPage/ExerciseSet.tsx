@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { Button } from '@/components/ui/button'
 import {
   Sheet,
   SheetContent,
@@ -10,6 +9,7 @@ import {
 } from '@/components/ui/sheet'
 import { type Exercise, type Set } from '@prisma/client'
 import { NewSet, type NewSetProps } from './NewSet'
+import { TableCell } from '@/components/ui/table'
 
 type SetControlsProps = {
   workoutId: NewSetProps['workoutId']
@@ -21,7 +21,7 @@ export function ExerciseSet({ workoutId, exercise, sets }: SetControlsProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button>{exercise.name}</Button>
+        <TableCell>{exercise.name}</TableCell>
       </SheetTrigger>
 
       <SheetContent className='flex flex-col'>
