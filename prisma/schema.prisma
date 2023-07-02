@@ -21,16 +21,16 @@ model Exercise {
 }
 
 model Set {
-    id         String    @id @default(uuid())
-    createdAt  DateTime  @default(now())
-    updatedAt  DateTime  @updatedAt
+    id         String   @id @default(uuid())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
     userId     String
     weight     Float
     reps       Int
-    workout    Workout?  @relation(fields: [workoutId], references: [id])
-    workoutId  String?
-    exercise   Exercise? @relation(fields: [exerciseId], references: [id])
-    exerciseId String?
+    workout    Workout  @relation(fields: [workoutId], references: [id])
+    workoutId  String
+    exercise   Exercise @relation(fields: [exerciseId], references: [id])
+    exerciseId String
 }
 
 model WorkoutPlan {
