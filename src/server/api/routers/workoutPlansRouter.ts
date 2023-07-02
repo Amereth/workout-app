@@ -1,9 +1,5 @@
 import { z } from 'zod'
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from '~/server/api/trpc'
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
 
 export const workoutPlansRouter = createTRPCRouter({
   get: protectedProcedure.input(z.string()).query(({ ctx, input }) =>
@@ -15,14 +11,14 @@ export const workoutPlansRouter = createTRPCRouter({
     })
   ),
 
-  getAll: publicProcedure.query((opts) =>
+  getAll: protectedProcedure.query((opts) =>
     opts.ctx.prisma.workoutPlan.findMany({
       where: { userId: opts.ctx.user?.id },
       include: { exercises: true },
     })
   ),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         name: z.string(),
@@ -30,10 +26,6 @@ export const workoutPlansRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.user) {
-        return
-      }
-
       return await ctx.prisma.workoutPlan.create({
         data: {
           name: input.name,
