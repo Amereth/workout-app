@@ -20,6 +20,9 @@ export const setsRouter = createTRPCRouter({
           workoutId: input.workoutId,
           exerciseId: input.exerciseId,
         },
+        include: {
+          exercise: true,
+        },
       })
     }),
 })
