@@ -13,6 +13,17 @@ export type WorkoutsRouter = {
       workoutPlan: true
     }
   }>
+
+  create: Prisma.WorkoutGetPayload<{
+    include: {
+      sets: {
+        include: {
+          exercise: true
+        }
+      }
+      workoutPlan: true
+    }
+  }>
 }
 
 export const workoutsRouter = createTRPCRouter({
@@ -34,21 +45,6 @@ export const workoutsRouter = createTRPCRouter({
           },
         },
       },
-      // select: {
-      //   id: true,
-      //   sets: {
-      //     include: {
-      //       exercise: true,
-      //     },
-      //   },
-      //   workoutPlan: {
-      //     select: {
-      //       id: true,
-      //       name: true,
-      //       exercises: true,
-      //     },
-      //   },
-      // },
     })
   ),
 

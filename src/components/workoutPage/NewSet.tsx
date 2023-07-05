@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SheetFooter } from '@/components/ui/sheet'
+import { type WorkoutsRouter } from '@/src/server/api/routers/workoutsRouter'
 import { api } from '@/src/utils/api'
 import { type Workout, type Exercise } from '@prisma/client'
 import { useQueryClient } from '@tanstack/react-query'
@@ -22,7 +25,7 @@ type Store = {
   reset: () => void
 }
 
-const useStore = create(
+const newSetStore = create(
   immer<Store>((set) => ({
     weight: 0,
     setWeight: (newWeight) =>
@@ -43,24 +46,27 @@ const useStore = create(
 )
 
 export function NewSet({ workoutId, exerciseId }: NewSetProps) {
+  const store = newSetStore()
+
   const queryClient = useQueryClient()
+  const workoutsGetQueryKey = getQueryKey(api.workouts.get, workoutId, 'query')
 
   const { mutate: createSet } = api.sets.create.useMutation({
     onSuccess(data) {
-      queryClient.setQueryData<Workout>(
-        getQueryKey(api.workouts.get, workoutId, 'query'),
-        (old) => {
-          if (!old) return old
-          return produce(old, (draft) => {
-            // FIXME potentially wrong type in prisma / trpc
+      queryClient.setQueryData<WorkoutsRouter['create']>(
+        workoutsGetQueryKey,
+        (old) =>
+          old &&
+          produce(old, (draft) => {
             draft.sets.push(data)
           })
-        }
       )
     },
-  })
 
-  const store = useStore()
+    onSettled() {
+      queryClient.invalidateQueries(workoutsGetQueryKey)
+    },
+  })
 
   function submit() {
     createSet({
