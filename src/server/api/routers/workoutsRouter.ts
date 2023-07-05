@@ -1,5 +1,19 @@
+import { type Prisma } from '@prisma/client'
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
+
+export type WorkoutsRouter = {
+  get: Prisma.WorkoutGetPayload<{
+    include: {
+      sets: {
+        include: {
+          exercise: true
+        }
+      }
+      workoutPlan: true
+    }
+  }>
+}
 
 export const workoutsRouter = createTRPCRouter({
   get: protectedProcedure.input(z.string()).query((opts) =>
@@ -8,21 +22,33 @@ export const workoutsRouter = createTRPCRouter({
         userId: opts.ctx.user?.id,
         id: opts.input,
       },
-      select: {
-        id: true,
+      include: {
         sets: {
           include: {
             exercise: true,
           },
         },
         workoutPlan: {
-          select: {
-            id: true,
-            name: true,
+          include: {
             exercises: true,
           },
         },
       },
+      // select: {
+      //   id: true,
+      //   sets: {
+      //     include: {
+      //       exercise: true,
+      //     },
+      //   },
+      //   workoutPlan: {
+      //     select: {
+      //       id: true,
+      //       name: true,
+      //       exercises: true,
+      //     },
+      //   },
+      // },
     })
   ),
 

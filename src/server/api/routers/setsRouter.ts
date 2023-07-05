@@ -11,18 +11,28 @@ export const setsRouter = createTRPCRouter({
         workoutId: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.set.create({
-        data: {
-          userId: ctx.user.id,
-          weight: input.weight,
-          reps: input.reps,
-          workoutId: input.workoutId,
-          exerciseId: input.exerciseId,
-        },
-        include: {
-          exercise: true,
+    .mutation(
+      async ({ ctx, input }) =>
+        await ctx.prisma.set.create({
+          data: {
+            userId: ctx.user.id,
+            weight: input.weight,
+            reps: input.reps,
+            workoutId: input.workoutId,
+            exerciseId: input.exerciseId,
+          },
+          include: {
+            exercise: true,
+          },
+        })
+    ),
+
+  delete: protectedProcedure.input(z.string()).mutation(
+    async ({ ctx, input }) =>
+      await ctx.prisma.set.delete({
+        where: {
+          id: input,
         },
       })
-    }),
+  ),
 })

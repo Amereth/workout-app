@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 
 import {
   Sheet,
@@ -12,6 +12,7 @@ import { NewSet, type NewSetProps } from './NewSet'
 import { TableCell } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { X, Edit } from 'lucide-react'
+import { useDeleteExerciseSet } from '@/src/hooks/set/useDeleteSet'
 
 type SetControlsProps = {
   workoutId: NewSetProps['workoutId']
@@ -19,7 +20,13 @@ type SetControlsProps = {
   sets: Set[]
 }
 
-export function ExerciseSet({ workoutId, exercise, sets }: SetControlsProps) {
+export const ExerciseSet = ({
+  workoutId,
+  exercise,
+  sets,
+}: SetControlsProps) => {
+  const { mutate: deleteSet } = useDeleteExerciseSet(workoutId)
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -52,7 +59,11 @@ export function ExerciseSet({ workoutId, exercise, sets }: SetControlsProps) {
                 <Button className='grow'>
                   <Edit />
                 </Button>
-                <Button variant='destructive' className='grow'>
+                <Button
+                  variant='destructive'
+                  className='grow'
+                  onClick={() => deleteSet(set.id)}
+                >
                   <X />
                 </Button>
               </div>
