@@ -71,7 +71,7 @@ export const ExerciseSet = ({
           ))}
         </ul>
 
-        <NewSet exerciseId={exercise.id} workoutId={workoutId} />
+        <NewSet exercise={exercise} workoutId={workoutId} />
       </SheetContent>
     </Sheet>
   )

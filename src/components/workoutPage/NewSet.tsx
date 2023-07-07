@@ -3,25 +3,21 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SheetFooter } from '@/components/ui/sheet'
-import { type WorkoutsRouter } from '@/src/server/api/routers/workoutsRouter'
-import { api } from '@/src/utils/api'
-import { type Workout, type Exercise } from '@prisma/client'
-import { useQueryClient } from '@tanstack/react-query'
-import { getQueryKey } from '@trpc/react-query'
-import { produce } from 'immer'
+import { useCreateSet } from '@/src/hooks/set/useCreateSet'
+import { type Workout, type Exercise, type Set } from '@prisma/client'
 import { z } from 'zod'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 export type NewSetProps = {
   workoutId: Workout['id']
-  exerciseId: Exercise['id']
+  exercise: Exercise
 }
 
 type Store = {
-  weight: number
+  weight: Set['weight']
   setWeight: (qty: number) => void
-  reps: number
+  reps: Set['reps']
   setReps: (qty: number) => void
   reset: () => void
 }
@@ -52,36 +48,18 @@ const newSetStore = create(
   }))
 )
 
-export function NewSet({ workoutId, exerciseId }: NewSetProps) {
+export function NewSet({ workoutId, exercise }: NewSetProps) {
   const store = newSetStore()
 
-  const queryClient = useQueryClient()
-  const workoutsGetQueryKey = getQueryKey(api.workouts.get, workoutId, 'query')
-
-  const { mutate: createSet } = api.sets.create.useMutation({
-    onSuccess(data) {
-      queryClient.setQueryData<WorkoutsRouter['create']>(
-        workoutsGetQueryKey,
-        (old) =>
-          old &&
-          produce(old, (draft) => {
-            draft.sets.push(data)
-          })
-      )
-    },
-
-    onSettled() {
-      queryClient.invalidateQueries(workoutsGetQueryKey)
-    },
-  })
+  const { mutate: createSet } = useCreateSet({ exercise, workoutId })
 
   function submit() {
     createSet({
       workoutId,
-      exerciseId,
+      exerciseId: exercise.id,
       weight: store.weight,
       reps: store.reps,
-    })
+    } as Set)
   }
 
   return (
