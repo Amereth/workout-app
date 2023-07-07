@@ -15,9 +15,8 @@ export const useDeleteExerciseSet = (workoutId: Workout['id']) => {
     async onMutate(setId) {
       await queryClient.cancelQueries(workoutsGetQueryKey)
 
-      const previous = queryClient.getQueryData(
-        workoutsGetQueryKey
-      ) as WorkoutsRouter['get']
+      const previous =
+        queryClient.getQueryData<WorkoutsRouter['get']>(workoutsGetQueryKey)
 
       queryClient.setQueryData<WorkoutsRouter['get']>(
         workoutsGetQueryKey,
