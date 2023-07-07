@@ -85,7 +85,7 @@ export function NewSet({ workoutId, exerciseId }: NewSetProps) {
   }
 
   return (
-    <div className='mt-auto flex flex-col items-center'>
+    <div className='mt-auto flex flex-col items-stretch'>
       <div className='mt-2 text-center'>weight</div>
       <div className='mt-1 flex items-end justify-center gap-x-4'>
         <Button onClick={() => store.setWeight(store.weight - 1)}>-</Button>
@@ -119,11 +119,11 @@ export function NewSet({ workoutId, exerciseId }: NewSetProps) {
         </Button>
       </div>
 
-      <SheetFooter className='mt-8 flex flex-row gap-4'>
-        <Button variant='destructive' className='w-28' onClick={store.reset}>
+      <SheetFooter className='mt-8 flex w-full flex-row gap-4'>
+        <Button variant='destructive' className='grow' onClick={store.reset}>
           clear
         </Button>
-        <Button variant='constructive' className='w-28' onClick={submit}>
+        <Button variant='constructive' className='grow' onClick={submit}>
           add
         </Button>
       </SheetFooter>
