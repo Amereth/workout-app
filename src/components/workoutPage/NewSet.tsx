@@ -9,6 +9,7 @@ import { type Workout, type Exercise } from '@prisma/client'
 import { useQueryClient } from '@tanstack/react-query'
 import { getQueryKey } from '@trpc/react-query'
 import { produce } from 'immer'
+import { z } from 'zod'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
@@ -25,20 +26,26 @@ type Store = {
   reset: () => void
 }
 
+const validate = (value: number) => z.number().min(0).parse(value)
+
 const newSetStore = create(
   immer<Store>((set) => ({
     weight: 0,
     setWeight: (newWeight) =>
-      set((state) => {
-        if (newWeight >= 0) return { weight: newWeight }
-        return state
+      set(() => {
+        try {
+          validate(newWeight)
+          return { weight: newWeight }
+        } catch (error) {}
       }),
 
     reps: 0,
     setReps: (newReps) =>
-      set((state) => {
-        if (newReps >= 0) return { reps: newReps }
-        return { reps: state.reps }
+      set(() => {
+        try {
+          validate(newReps)
+          if (newReps >= 0) return { reps: newReps }
+        } catch (error) {}
       }),
 
     reset: () => set(() => ({ weight: 0, reps: 0 })),
