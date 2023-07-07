@@ -56,15 +56,15 @@ export const ExerciseSet = ({
               </div>
 
               <div className='mt-2 flex gap-x-4'>
-                <Button className='grow'>
-                  <Edit />
-                </Button>
                 <Button
                   variant='destructive'
                   className='grow'
                   onClick={() => deleteSet(set.id)}
                 >
                   <X />
+                </Button>
+                <Button className='grow'>
+                  <Edit />
                 </Button>
               </div>
             </li>
