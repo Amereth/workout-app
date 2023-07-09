@@ -15,6 +15,7 @@ import { useCreateSet } from '@/src/hooks/set/useCreateSet'
 import { useUpdateSet } from '@/src/hooks/set/useUpdateSet'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type Workout, type Exercise, type Set } from '@prisma/client'
+import clsx from 'clsx'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -41,6 +42,7 @@ export function NewSet({
   editedSet,
   finishEditing,
 }: NewSetProps) {
+  console.log('editedSet:', editedSet)
   const { mutate: createSet } = useCreateSet({ exercise, workoutId })
   const { mutate: updateSet } = useUpdateSet({ workoutId })
 
@@ -112,16 +114,17 @@ export function NewSet({
         <SheetFooter className='mt-4 flex w-full flex-row gap-4'>
           <Button
             variant='destructive'
-            className='basis-1/2'
+            className={clsx('basis-1/2', !editedSet && 'invisible')}
             type='reset'
             onClick={() => {
               form.reset(defaultValues)
               finishEditing()
             }}
           >
-            clear
+            cancel
           </Button>
-          <Button className='basis-1/2' type='submit'>
+
+          <Button className='ml-auto basis-1/2' type='submit'>
             {editedSet ? 'update' : 'add'}
           </Button>
         </SheetFooter>
