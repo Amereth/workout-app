@@ -11,6 +11,12 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
+model MuscleGroup {
+    id        String     @id @default(uuid())
+    name      String     @unique
+    exercises Exercise[]
+}
+
 model Exercise {
     id           String        @id @default(uuid())
     createdAt    DateTime      @default(now())
@@ -18,6 +24,7 @@ model Exercise {
     name         String        @unique
     workoutPlans WorkoutPlan[]
     sets         Set[]
+    muscleGroups MuscleGroup[]
 }
 
 model Set {
