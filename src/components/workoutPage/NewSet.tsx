@@ -109,11 +109,11 @@ export function NewSet({
           />
         </div>
 
-        <SheetFooter className='mt-8 flex w-full flex-row gap-4'>
-          <Button variant='destructive' className='grow' type='reset'>
+        <SheetFooter className='mt-4 flex w-full flex-row gap-4'>
+          <Button variant='destructive' className='basis-1/2' type='reset'>
             clear
           </Button>
-          <Button className='grow' type='submit'>
+          <Button className='basis-1/2' type='submit'>
             {editedSet ? 'update' : 'add'}
           </Button>
         </SheetFooter>
