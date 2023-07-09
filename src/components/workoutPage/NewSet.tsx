@@ -54,6 +54,8 @@ export function NewSet({
   useEffect(() => {
     if (editedSet) {
       form.reset(editedSet)
+    } else {
+      form.reset(defaultValues)
     }
   }, [editedSet])
 

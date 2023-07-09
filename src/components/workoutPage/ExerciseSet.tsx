@@ -62,7 +62,10 @@ export const ExerciseSet = ({
                 <Button
                   variant='destructive'
                   className='grow'
-                  onClick={() => deleteSet(set.id)}
+                  onClick={() => {
+                    deleteSet(set.id)
+                    if (set.id === editedSet?.id) setEditedSet(undefined)
+                  }}
                 >
                   <X />
                 </Button>
