@@ -1,110 +1,123 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { SheetFooter } from '@/components/ui/sheet'
 import { useCreateSet } from '@/src/hooks/set/useCreateSet'
+import { useUpdateSet } from '@/src/hooks/set/useUpdateSet'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { type Workout, type Exercise, type Set } from '@prisma/client'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { create } from 'zustand'
-import { immer } from 'zustand/middleware/immer'
 
 export type NewSetProps = {
   workoutId: Workout['id']
   exercise: Exercise
+  editedSet?: Pick<Set, 'id' | 'weight' | 'reps'>
+  finishEditing: () => void
 }
 
-type Store = {
-  weight: Set['weight']
-  setWeight: (qty: number) => void
-  reps: Set['reps']
-  setReps: (qty: number) => void
-  reset: () => void
-}
+const schema = z.object({
+  weight: z.number().nonnegative(),
+  reps: z.number().positive().int(),
+})
 
-const validate = (value: number) => z.number().min(0).parse(value)
+type Schema = z.infer<typeof schema>
 
-const newSetStore = create(
-  immer<Store>((set) => ({
-    weight: 0,
-    setWeight: (newWeight) =>
-      set(() => {
-        try {
-          validate(newWeight)
-          return { weight: newWeight }
-        } catch (error) {}
-      }),
+const defaultValues = { weight: 0, reps: 0 }
 
-    reps: 0,
-    setReps: (newReps) =>
-      set(() => {
-        try {
-          validate(newReps)
-          if (newReps >= 0) return { reps: newReps }
-        } catch (error) {}
-      }),
-
-    reset: () => set(() => ({ weight: 0, reps: 0 })),
-  }))
-)
-
-export function NewSet({ workoutId, exercise }: NewSetProps) {
-  const store = newSetStore()
-
+export function NewSet({
+  workoutId,
+  exercise,
+  editedSet,
+  finishEditing,
+}: NewSetProps) {
   const { mutate: createSet } = useCreateSet({ exercise, workoutId })
+  const { mutate: updateSet } = useUpdateSet({ workoutId })
 
-  function submit() {
-    createSet({
-      workoutId,
-      exerciseId: exercise.id,
-      weight: store.weight,
-      reps: store.reps,
-    } as Set)
+  const form = useForm<Schema>({
+    resolver: zodResolver(schema),
+    defaultValues: editedSet ?? defaultValues,
+  })
+
+  useEffect(() => {
+    if (editedSet) {
+      form.reset(editedSet)
+    }
+  }, [editedSet])
+
+  const submit = (data: Schema) => {
+    editedSet?.id
+      ? updateSet({ ...data, id: editedSet.id })
+      : createSet({ ...data, workoutId, exerciseId: exercise.id })
+    form.reset({ weight: 0, reps: 0 })
+    finishEditing()
   }
 
   return (
-    <div className='mt-auto flex flex-col items-stretch'>
-      <div className='mt-2 text-center'>weight</div>
-      <div className='mt-1 flex items-end justify-center gap-x-4'>
-        <Button onClick={() => store.setWeight(store.weight - 1)}>-</Button>
-        <Input
-          value={store.weight}
-          onChange={(event) => store.setWeight(Number(event.target.value))}
-          type='number'
-          className='text-center'
-        />
-        <Button
-          className='!mt-0'
-          onClick={() => store.setWeight(store.weight + 1)}
-        >
-          +
-        </Button>
-      </div>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(submit)}
+        className='mt-auto flex flex-col items-stretch'
+      >
+        <div className='flex gap-x-4'>
+          <FormField
+            control={form.control}
+            name='weight'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>weight</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type='number'
+                    className='text-center'
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <div className='mt-4 text-center'>reps</div>
-      <div className='mt-1 flex items-end gap-x-4'>
-        <Button onClick={() => store.setReps(store.reps - 1)}>-</Button>
+          <FormField
+            control={form.control}
+            name='reps'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>reps</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type='number'
+                    className='text-center'
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <Input
-          value={store.reps}
-          onChange={(event) => store.setReps(Number(event.target.value))}
-          type='number'
-          className='text-center'
-        />
-
-        <Button className='!mt-0' onClick={() => store.setReps(store.reps + 1)}>
-          +
-        </Button>
-      </div>
-
-      <SheetFooter className='mt-8 flex w-full flex-row gap-4'>
-        <Button variant='destructive' className='grow' onClick={store.reset}>
-          clear
-        </Button>
-        <Button variant='constructive' className='grow' onClick={submit}>
-          add
-        </Button>
-      </SheetFooter>
-    </div>
+        <SheetFooter className='mt-8 flex w-full flex-row gap-4'>
+          <Button variant='destructive' className='grow' type='reset'>
+            clear
+          </Button>
+          <Button className='grow' type='submit'>
+            {editedSet ? 'update' : 'add'}
+          </Button>
+        </SheetFooter>
+      </form>
+    </Form>
   )
 }

@@ -13,6 +13,7 @@ import { TableCell } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { X, Edit } from 'lucide-react'
 import { useDeleteExerciseSet } from '@/src/hooks/set/useDeleteSet'
+import { useState } from 'react'
 
 type SetControlsProps = {
   workoutId: NewSetProps['workoutId']
@@ -26,6 +27,10 @@ export const ExerciseSet = ({
   sets,
 }: SetControlsProps) => {
   const { mutate: deleteSet } = useDeleteExerciseSet(workoutId)
+
+  const [editedSet, setEditedSet] = useState<
+    Pick<Set, 'id' | 'weight' | 'reps'> | undefined
+  >(undefined)
 
   return (
     <Sheet>
@@ -43,15 +48,14 @@ export const ExerciseSet = ({
             <li key={set.id}>
               <div className='flex h-10 justify-between text-2xl'>
                 <div className='flex basis-1/2 justify-between'>
-                  <div>reps</div>
-                  <div>{set.reps}</div>
+                  <div>{set.weight}</div>
+                  <div>weight</div>
                 </div>
 
                 <div className='mx-4 w-[2px] self-stretch bg-black' />
-
                 <div className='flex basis-1/2 justify-between'>
-                  <div>{set.weight}</div>
-                  <div>weight</div>
+                  <div>reps</div>
+                  <div>{set.reps}</div>
                 </div>
               </div>
 
@@ -63,7 +67,16 @@ export const ExerciseSet = ({
                 >
                   <X />
                 </Button>
-                <Button className='grow'>
+                <Button
+                  className='grow'
+                  onClick={() =>
+                    setEditedSet({
+                      id: set.id,
+                      weight: set.weight,
+                      reps: set.reps,
+                    })
+                  }
+                >
                   <Edit />
                 </Button>
               </div>
@@ -71,7 +84,12 @@ export const ExerciseSet = ({
           ))}
         </ul>
 
-        <NewSet exercise={exercise} workoutId={workoutId} />
+        <NewSet
+          exercise={exercise}
+          workoutId={workoutId}
+          editedSet={editedSet}
+          finishEditing={() => setEditedSet(undefined)}
+        />
       </SheetContent>
     </Sheet>
   )

@@ -2,26 +2,20 @@
 
 import { type WorkoutsRouter } from '@/src/server/api/routers/workoutsRouter'
 import { api } from '@/src/utils/api'
-import { useUser } from '@clerk/nextjs'
-import { type Exercise, type Workout } from '@prisma/client'
+import { type Workout } from '@prisma/client'
 import { useQueryClient } from '@tanstack/react-query'
 import { getQueryKey } from '@trpc/react-query'
 import { produce } from 'immer'
-import { useId } from 'react'
 
 type UseUpsertSetProps = {
   workoutId: Workout['id']
-  exercise: Exercise
 }
 
-export const useCreateSet = ({ exercise, workoutId }: UseUpsertSetProps) => {
-  const newSetId = useId()
-  const user = useUser()
-
+export const useUpdateSet = ({ workoutId }: UseUpsertSetProps) => {
   const queryClient = useQueryClient()
   const workoutsGetQueryKey = getQueryKey(api.workouts.get, workoutId, 'query')
 
-  return api.sets.create.useMutation({
+  return api.sets.update.useMutation({
     async onMutate(variables) {
       await queryClient.cancelQueries(workoutsGetQueryKey)
 
@@ -33,14 +27,11 @@ export const useCreateSet = ({ exercise, workoutId }: UseUpsertSetProps) => {
         (old) =>
           old &&
           produce(old, (draft) => {
-            draft.sets.push({
-              ...variables,
-              id: newSetId,
-              userId: user.user?.id ?? '',
-              exerciseId: exercise.id,
-              exercise,
-              createdAt: new Date(),
-              updatedAt: new Date(),
+            draft.sets.forEach((set) => {
+              if (set.id !== variables.id) return
+
+              if (variables.weight) set.weight = variables.weight
+              if (variables.reps) set.reps = variables.reps
             })
           })
       )
