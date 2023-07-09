@@ -46,20 +46,19 @@ export const ExerciseSet = ({
         <ul className='flex flex-col gap-y-4'>
           {sets.map((set) => (
             <li key={set.id}>
-              <div className='flex h-10 justify-between text-2xl'>
-                <div className='flex basis-1/2 justify-between'>
-                  <div>{set.weight}</div>
-                  <div>weight</div>
+              <div className='flex justify-center gap-x-2'>
+                <div className='flex basis-1/2 items-baseline justify-end gap-x-1'>
+                  <span className='text-xl font-bold'>{set.weight}</span>
+                  <span>kg</span>
                 </div>
-
-                <div className='mx-4 w-[2px] self-stretch bg-black' />
-                <div className='flex basis-1/2 justify-between'>
-                  <div>reps</div>
-                  <div>{set.reps}</div>
+                <span>-</span>
+                <div className='flex basis-1/2 items-baseline gap-x-1'>
+                  <span className='text-xl font-bold'>{set.reps}</span>
+                  <span>reps</span>
                 </div>
               </div>
 
-              <div className='mt-2 flex gap-x-4'>
+              <div className='mt-1 flex gap-x-4'>
                 <Button
                   variant='destructive'
                   className='grow'
