@@ -110,7 +110,15 @@ export function NewSet({
         </div>
 
         <SheetFooter className='mt-4 flex w-full flex-row gap-4'>
-          <Button variant='destructive' className='basis-1/2' type='reset'>
+          <Button
+            variant='destructive'
+            className='basis-1/2'
+            type='reset'
+            onClick={() => {
+              form.reset(defaultValues)
+              finishEditing()
+            }}
+          >
             clear
           </Button>
           <Button className='basis-1/2' type='submit'>
