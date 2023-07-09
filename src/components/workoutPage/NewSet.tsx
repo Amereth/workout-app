@@ -42,7 +42,6 @@ export function NewSet({
   editedSet,
   finishEditing,
 }: NewSetProps) {
-  console.log('editedSet:', editedSet)
   const { mutate: createSet } = useCreateSet({ exercise, workoutId })
   const { mutate: updateSet } = useUpdateSet({ workoutId })
 
