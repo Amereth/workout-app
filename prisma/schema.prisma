@@ -25,6 +25,7 @@ model Exercise {
     workoutPlans WorkoutPlan[]
     sets         Set[]
     muscleGroups MuscleGroup[]
+    userId       String?
 }
 
 model Set {
