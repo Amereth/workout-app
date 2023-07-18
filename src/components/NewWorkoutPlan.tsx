@@ -10,7 +10,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   FormControl,
   FormField,
@@ -24,25 +23,27 @@ import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { api } from '../utils/api'
+import { AddExercisesToWorkoutPlan } from './AddExercisesToWorkoutPlan'
+import { ChangeExercisesOrder } from './ChangeExercisesOrder'
 
 const formSchema = z.object({
   name: z.string().min(3, 'min 3 characters').max(50, 'max 50 characters'),
   exercises: z.array(z.string()),
 })
 
+export type WorkoutPlanFormSchema = z.infer<typeof formSchema>
+
 export const NewWorkoutPlan = () => {
   const { mutate } = api.workoutPlans.create.useMutation()
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<WorkoutPlanFormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: { name: '', exercises: [] },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: WorkoutPlanFormSchema) {
     mutate(values)
   }
-
-  const { data: exercises } = api.exercises.getAll.useQuery()
 
   return (
     <Sheet>
@@ -50,13 +51,16 @@ export const NewWorkoutPlan = () => {
         <Button>new workout plan</Button>
       </SheetTrigger>
 
-      <SheetContent>
+      <SheetContent className='flex flex-col'>
         <SheetHeader>
           <SheetTitle>new workout plan</SheetTitle>
         </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='mt-8'>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='mt-8 flex flex-grow flex-col'
+          >
             <FormField
               control={form.control}
               name='name'
@@ -71,46 +75,17 @@ export const NewWorkoutPlan = () => {
               )}
             />
 
-            <div className='mt-6 text-sm'>exercises</div>
+            <div className='mb-4 mt-6 text-sm font-semibold'>exercises</div>
 
-            <div className='mt-2 flex flex-col gap-4'>
-              {exercises?.map((exercise) => (
-                <FormField
-                  key={exercise.id}
-                  control={form.control}
-                  name='exercises'
-                  render={({ field }) => (
-                    <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
-                      <FormControl>
-                        <Checkbox
-                          value={exercise.id}
-                          checked={field.value.includes(exercise.id)}
-                          onCheckedChange={(data) => {
-                            if (data) {
-                              field.onChange([...field.value, exercise.id])
-                              return
-                            }
-                            field.onChange(
-                              field.value.filter((id) => id !== exercise.id)
-                            )
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className='h-full w-full space-y-1 leading-none'>
-                        {exercise.name}
-                      </FormLabel>
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </div>
+            <AddExercisesToWorkoutPlan />
 
-            <SheetFooter className='mt-8 flex justify-end gap-4'>
+            <ChangeExercisesOrder />
+
+            <SheetFooter className='mt-auto'>
               <SheetClose asChild>
-                <Button type='reset'>cancel</Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button type='submit'>create</Button>
+                <Button type='submit' className='mt-8'>
+                  create
+                </Button>
               </SheetClose>
             </SheetFooter>
           </form>
