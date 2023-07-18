@@ -56,12 +56,13 @@ export function NewSet({
     } else {
       form.reset(defaultValues)
     }
-  }, [editedSet])
+  }, [editedSet, form])
 
   const submit = (data: Schema) => {
     editedSet?.id
       ? updateSet({ ...data, id: editedSet.id })
       : createSet({ ...data, workoutId, exerciseId: exercise.id })
+
     form.reset({ weight: 0, reps: 0 })
     finishEditing()
   }
