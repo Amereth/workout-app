@@ -24,7 +24,7 @@ export default function WorkoutPage() {
     <>
       <PageHeader>
         <Link href='/' className={buttonVariants({ variant: 'default' })}>
-          go home
+          back
         </Link>
       </PageHeader>
 
