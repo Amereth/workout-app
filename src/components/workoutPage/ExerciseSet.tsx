@@ -46,41 +46,47 @@ export const ExerciseSet = ({
         <ul className='flex flex-col gap-y-4'>
           {sets.map((set) => (
             <li key={set.id}>
-              <div className='flex justify-center gap-x-2'>
-                <div className='flex basis-1/2 items-baseline justify-end gap-x-1'>
-                  <span className='text-xl font-bold'>{set.weight}</span>
-                  <span>kg</span>
+              <div className='flex justify-center gap-x-4'>
+                <div className='flex basis-1/2 items-center justify-end gap-x-1'>
+                  <Button
+                    size='icon'
+                    className='mr-auto'
+                    variant='destructive'
+                    onClick={() => {
+                      deleteSet(set.id)
+                      if (set.id === editedSet?.id) setEditedSet(undefined)
+                    }}
+                  >
+                    <X />
+                  </Button>
+                  <div>
+                    <span className='text-xl font-bold'>{set.weight}</span>
+                    <span> kg</span>
+                  </div>
                 </div>
-                <span>-</span>
-                <div className='flex basis-1/2 items-baseline gap-x-1'>
-                  <span className='text-xl font-bold'>{set.reps}</span>
-                  <span>reps</span>
-                </div>
-              </div>
 
-              <div className='mt-1 flex gap-x-4'>
-                <Button
-                  variant='destructive'
-                  className='grow'
-                  onClick={() => {
-                    deleteSet(set.id)
-                    if (set.id === editedSet?.id) setEditedSet(undefined)
-                  }}
-                >
-                  <X />
-                </Button>
-                <Button
-                  className='grow'
-                  onClick={() =>
-                    setEditedSet({
-                      id: set.id,
-                      weight: set.weight,
-                      reps: set.reps,
-                    })
-                  }
-                >
-                  <Edit />
-                </Button>
+                <div className='border-[1px] border-black' />
+
+                <div className='flex basis-1/2 items-center gap-x-1'>
+                  <div>
+                    <span className='text-xl font-bold'>{set.reps}</span>
+                    <span> reps</span>
+                  </div>
+
+                  <Button
+                    size='icon'
+                    className='ml-auto'
+                    onClick={() =>
+                      setEditedSet({
+                        id: set.id,
+                        weight: set.weight,
+                        reps: set.reps,
+                      })
+                    }
+                  >
+                    <Edit />
+                  </Button>
+                </div>
               </div>
             </li>
           ))}
