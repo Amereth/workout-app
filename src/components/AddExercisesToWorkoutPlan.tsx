@@ -86,10 +86,10 @@ export const AddExercisesToWorkoutPlan = () => {
           control={control}
           name='exercises'
           render={({ field }) => (
-            <ul className='mt-4 flex flex-col gap-y-4'>
+            <ul className='mt-4 flex flex-col gap-y-2'>
               {filteredExercises?.map((exercise) => (
                 <li key={exercise.id}>
-                  <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md'>
+                  <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border-[1px] p-2'>
                     <FormControl>
                       <Checkbox
                         value={exercise.id}
