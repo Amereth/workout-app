@@ -17,7 +17,7 @@ import {
 } from '@dnd-kit/sortable'
 import { type Exercise } from '@prisma/client'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { type WorkoutPlanFormSchema } from './NewWorkoutPlan'
+import { type WorkoutPlanFormSchema } from '../pages/new-workout-plan'
 import { api } from '../utils/api'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVerticalIcon } from 'lucide-react'

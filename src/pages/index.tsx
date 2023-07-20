@@ -4,10 +4,7 @@ import { type NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
-import { NewWorkoutPlan } from '../components/NewWorkoutPlan'
-import { NewWorkout } from '../components/NewWorkout'
 import { api } from '../utils/api'
-import { PageHeader } from '../components/PageHeader'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
 const Home: NextPage = () => {
@@ -34,11 +31,6 @@ const Home: NextPage = () => {
       <Head>
         <title>We Workout</title>
       </Head>
-
-      <PageHeader>
-        <NewWorkoutPlan />
-        <NewWorkout />
-      </PageHeader>
 
       <main>
         <Table>

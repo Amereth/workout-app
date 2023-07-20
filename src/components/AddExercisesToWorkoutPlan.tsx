@@ -19,7 +19,7 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { useFormContext } from 'react-hook-form'
-import { type WorkoutPlanFormSchema } from './NewWorkoutPlan'
+import { type WorkoutPlanFormSchema } from '../pages/new-workout-plan'
 import { Checkbox } from '@/components/ui/checkbox'
 
 type MuscleGroupsStore = {
