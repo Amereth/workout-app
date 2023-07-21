@@ -22,7 +22,7 @@ import { api } from '../utils/api'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVerticalIcon } from 'lucide-react'
 
-export const ChangeExercisesOrder = () => {
+export const ExerciseReorderableList = () => {
   const { data: exercises } = api.exercises.getAll.useQuery()
 
   const { setValue } = useFormContext<WorkoutPlanFormSchema>()

@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { AddExercisesToWorkoutPlan } from '../components/AddExercisesToWorkoutPlan'
-import { ChangeExercisesOrder } from '../components/ChangeExercisesOrder'
+import { ExerciseReorderableList } from '../components/ExerciseReorderableList'
 import { api } from '../utils/api'
 
 const formSchema = z.object({
@@ -65,7 +65,7 @@ const NewWorkoutPlan = () => {
 
           <AddExercisesToWorkoutPlan />
 
-          <ChangeExercisesOrder />
+          <ExerciseReorderableList />
 
           <Button type='submit' className='mt-8'>
             create
