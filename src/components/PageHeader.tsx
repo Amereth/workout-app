@@ -39,17 +39,17 @@ export const PageHeader = ({ children }: PageHeaderProps) => {
   }, [pathname])
 
   return (
-    <header className='flex gap-4 px-4 py-4 shadow-xl'>
+    <header className='flex items-center gap-4 p-4 shadow-xl'>
       <Button asChild>
         <Link passHref href='/'>
           home
         </Link>
       </Button>
 
-      <h2 className='mx-auto'>{content}</h2>
+      <h2 className='mx-auto text-lg font-semibold'>{content}</h2>
 
       <Sheet open={isOpen} onOpenChange={setOpen}>
-        <SheetTrigger className=''>
+        <SheetTrigger>
           <Avatar>
             <AvatarImage src={user.user?.profileImageUrl} />
             <AvatarFallback>

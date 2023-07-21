@@ -13,7 +13,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <ClerkProvider>
       <HeaderContext.Provider value={[headerContent, setHeaderContent]}>
         <ReactQueryDevtools initialIsOpen />
-        <div className='flex flex-col'>
+        <div className='flex h-full flex-col'>
           <PageHeader />
 
           <Component {...pageProps} />

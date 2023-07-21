@@ -67,7 +67,7 @@ export const AddExercisesToWorkoutPlan = () => {
           <SheetTitle>add exercises</SheetTitle>
         </SheetHeader>
 
-        <ul className='mt-8 flex flex-wrap gap-2'>
+        <ul className='flex flex-wrap gap-2'>
           {muscleGroups?.map((muscleGroup) => (
             <li key={muscleGroup.id}>
               <Toggle

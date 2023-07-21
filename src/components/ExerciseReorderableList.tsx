@@ -1,17 +1,19 @@
 import {
   useSensors,
   useSensor,
-  PointerSensor,
-  KeyboardSensor,
   DndContext,
   closestCenter,
   type DragEndEvent,
+  MouseSensor,
+  TouchSensor,
 } from '@dnd-kit/core'
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from '@dnd-kit/modifiers'
 import {
   SortableContext,
   arrayMove,
-  sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
@@ -30,19 +32,13 @@ export const ExerciseReorderableList = () => {
     name: 'exercises',
   }) as Exercise['id'][]
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  )
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor))
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id === over?.id) return
 
     const oldIndex = selectedIds.indexOf(active.id as string)
     const newIndex = selectedIds.indexOf(over?.id as string)
-
     setValue('exercises', arrayMove(selectedIds, oldIndex, newIndex))
   }
 
@@ -51,13 +47,13 @@ export const ExerciseReorderableList = () => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis]}
+      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
       <SortableContext
         items={selectedIds}
         strategy={verticalListSortingStrategy}
       >
-        <ul className='mt-2 flex flex-col gap-y-2'>
+        <ul className='mt-8 flex flex-col gap-y-2'>
           {selectedIds
             .map((id) => exercises?.find((exercise) => exercise.id === id))
             .map(
@@ -91,7 +87,7 @@ const SortableItem = ({ exercise }: SortableItemProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className='flex justify-between rounded-md border-[1px] border-primary bg-white p-2'
+      className='flex touch-manipulation justify-between rounded-md border-[1px] border-primary bg-white p-2'
     >
       {exercise.name}
       <GripVerticalIcon />
