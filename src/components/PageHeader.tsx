@@ -10,13 +10,26 @@ import {
 import { useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, type ReactNode, useState } from 'react'
+import {
+  useEffect,
+  type ReactNode,
+  useState,
+  createContext,
+  type Dispatch,
+  type SetStateAction,
+} from 'react'
+import { usePageHeader } from '../hooks/usePageHeader'
 
 type PageHeaderProps = {
   children?: ReactNode
 }
 
+export const HeaderContext = createContext<
+  [string, Dispatch<SetStateAction<string>>]
+>(['', () => ''])
+
 export const PageHeader = ({ children }: PageHeaderProps) => {
+  const [content] = usePageHeader()
   const [isOpen, setOpen] = useState(false)
   const { pathname } = useRouter()
   const user = useUser()
@@ -32,8 +45,11 @@ export const PageHeader = ({ children }: PageHeaderProps) => {
           home
         </Link>
       </Button>
+
+      <h2 className='mx-auto'>{content}</h2>
+
       <Sheet open={isOpen} onOpenChange={setOpen}>
-        <SheetTrigger className='ml-auto'>
+        <SheetTrigger className=''>
           <Avatar>
             <AvatarImage src={user.user?.profileImageUrl} />
             <AvatarFallback>
